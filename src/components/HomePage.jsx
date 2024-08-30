@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 export default function HomePage(props) {
   const { setFile, setAudioStream } = props;
+  const { recordingStatus, setRecordingStatus } = useState("inactive");
+  const { audioChunks, setAudioChunks } = useState;
+
   return (
     <main className="flex-1 p-4 flex flex-col gap-3 text-center sm:gap-4 md:gap-5 justify-center pb-20">
       <h1 className="font-semibold text-5xl sm:text-6xl md:text-7xl">
@@ -32,7 +35,7 @@ export default function HomePage(props) {
         </label>
         a mp3 file
       </p>
-      <p className="italic text-500">
+      <p className="italic text-slate-300">
         Made with
         <span>
           <i
