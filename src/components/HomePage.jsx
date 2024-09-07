@@ -24,9 +24,6 @@ export default function HomePage(props) {
     setRecordingStatus("recording");
     console.log(recordingStatus);
 
-    // console.log(tempStream);
-    // console.log("This is temp");
-    //create new media recorder instance using the stream
     const media = new MediaRecorder(tempStream, { type: mimeType });
     mediaRecorder.current = media;
 
