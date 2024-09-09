@@ -10,7 +10,6 @@ export default function Header() {
       specialBtn px-4 py-2 rounded-lg text-purple-400
       "
       >
-        <div>just testing gitlens</div>
         <p>New</p>
         <i className="fa-solid fa-plus"></i>
       </button>

@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import HomePage from "./components/HomePage";
 import Header from "./components/Header";
 import FileDisplay from "./components/FileDisplay";
-import Translation from "./components/Translation";
+import Information from "./components/Information";
 import Transcribing from "./components/Transcribing";
 
 function App() {
   const [file, setFile] = useState(null);
   const [audioStream, setAudioStream] = useState(null);
-  const [output, setOutPut] = useState(null);
+  const [output, setOutPut] = useState(true);
   const [loading, setLoading] = useState(true);
   const isAudioAvailable = file || audioStream;
 
@@ -24,7 +24,7 @@ function App() {
       <section className="min-h-screen flex flex-col">
         <Header />
         {output ? (
-          <Translation />
+          <Information />
         ) : loading ? (
           <Transcribing />
         ) : isAudioAvailable ? (
