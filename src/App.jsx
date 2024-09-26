@@ -15,7 +15,7 @@ function App() {
   const [finished, setFinished] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
-  function resetAudioHandler() {
+  function handleAudioReset() {
     setFile(null);
     setAudioStream(null);
   }
@@ -59,20 +59,20 @@ function App() {
     const decoded = await audioCTX.decodeAudioData(response);
     const audio = decoded.getChannelData(0);
     return audio;
-
-    async function handleFormSubmission(params) {
-      if (!file && !audioStream) {
-        return;
-      }
-      let audio = await readAudioFrom(file ? file : audioStream);
-      const model_name = "openai/whisper-tiny.en";
-      worker.current.postMessage({
-        type: MessageTypes.INFERENCE_REQUEST,
-        audio,
-        model_name,
-      });
-    }
   }
+  async function handleFormSubmission(params) {
+    if (!file && !audioStream) {
+      return;
+    }
+    let audio = await readAudioFrom(file ? file : audioStream);
+    const model_name = "openai/whisper-tiny.en";
+    worker.current.postMessage({
+      type: MessageTypes.INFERENCE_REQUEST,
+      audio,
+      model_name,
+    });
+  }
+
   return (
     <div className="flex flex-col max-w-[1000px] mx-auto w-full">
       <section className="min-h-screen flex flex-col">
@@ -83,7 +83,8 @@ function App() {
           <Transcribing />
         ) : isAudioAvailable ? (
           <FileDisplay
-            resetAudioHandler={resetAudioHandler}
+            handleFormSubmission={handleFormSubmission}
+            handleAudioReset={handleAudioReset}
             file={file}
             audioStream={audioStream}
           />
