@@ -75,7 +75,7 @@ function App() {
     }
 
     let audio = await readAudioFrom(file ? file : audioStream);
-    const model_name = `openai/whisper-tiny.en`;
+    const model_name = `openai/whisper-small.en`;
 
     worker.current.postMessage({
       type: MessageTypes.INFERENCE_REQUEST,

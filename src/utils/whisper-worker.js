@@ -1,14 +1,38 @@
 import { pipeline } from "@xenova/transformers";
 import { MessageTypes } from "./presets";
+// const pipelinexe = await require("@xenova/transformers").pipeline;
+
+// const whisperPipeline = await pipeline(
+//   "automatic-speech-recognition",
+//   "openai/whisper-tiny.en"
+// );
+// console.log("pipline of xenova", pipelinexe);
+// console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+// if (whisperPipeline != null) {
+//   try {
+//     console.log("whisper pipe", whisperPipeline);
+//   } catch (err) {
+//     console.log("whisper pipe err", err);
+//   }
+// }
 
 class MyTranscriptionPipeline {
   static task = "automatic-speech-recognition";
-  static model = "openai/whisper-tiny.en";
+  static model = "openai/whisper-small.en";
   static instance = null;
-
   static async getInstance(progress_callback = null) {
+    console.log("the task is ", this.task);
+    console.log(this.instance);
+    console.log(progress_callback);
     if (this.instance === null) {
-      this.instance = await pipeline(this.task, null, { progress_callback });
+      try {
+        console.log("progress callback", progress_callback);
+        this.instance = await pipeline(this.task, null, {
+          progress_callback,
+        });
+      } catch (err) {
+        console.log("error inside class MyTranscriptionPipeline", err);
+      }
     }
 
     return this.instance;
@@ -17,6 +41,7 @@ class MyTranscriptionPipeline {
 
 self.addEventListener("message", async (event) => {
   const { type, audio } = event.data;
+  console.log("event data", event.data);
   if (type === MessageTypes.INFERENCE_REQUEST) {
     await transcribe(audio);
   }
@@ -30,7 +55,7 @@ async function transcribe(audio) {
   try {
     pipeline = await MyTranscriptionPipeline.getInstance(load_model_callback);
   } catch (err) {
-    console.log(err.message);
+    console.log("error in transcribe function", err.message);
   }
 
   sendLoadingMessage("success");
@@ -53,6 +78,9 @@ async function transcribe(audio) {
 
 async function load_model_callback(data) {
   const { status } = data;
+  // console.log("event data", event.data);
+  console.log("normal data", data);
+  console.log("status:", data);
   if (status === "progress") {
     const { file, progress, loaded, total } = data;
     sendDownloadingMessage(file, progress, loaded, total);
@@ -78,6 +106,7 @@ async function sendDownloadingMessage(file, progress, loaded, total) {
 
 class GenerationTracker {
   constructor(pipeline, stride_length_s) {
+    console.log("inside constructor of generation tracker", pipeline);
     this.pipeline = pipeline;
     this.stride_length_s = stride_length_s;
     this.chunks = [];

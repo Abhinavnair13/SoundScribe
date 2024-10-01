@@ -15,7 +15,7 @@ export default function Information(props) {
   useEffect(() => {
     if (!worker.current) {
       worker.current = new Worker(
-        new URL("../utils/translate.worker.js", import.meta.url),
+        new URL("../utils/translate-worker.js", import.meta.url),
         {
           type: "module",
         }

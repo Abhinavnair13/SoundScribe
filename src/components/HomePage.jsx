@@ -98,7 +98,7 @@ export default function HomePage(props) {
             }}
             className="hidden"
             type="file"
-            accept=".mp3,.wav"
+            accept=".mp3,.wav,.m4a"
           />
         </label>
         a mp3 file
