@@ -13,6 +13,7 @@ function App() {
   const [downloading, setDownloading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [error, setError] = useState(null); // New error state
 
   const isAudioAvailable = file || audioStream;
 
@@ -34,13 +35,16 @@ function App() {
     }
 
     const onMessageReceived = async (e) => {
+      console.log(e.data.type);
       switch (e.data.type) {
         case "DOWNLOADING":
           setDownloading(true);
+          setError(null); // Reset any previous error
           console.log("DOWNLOADING");
           break;
         case "LOADING":
           setLoading(true);
+          setError(null); // Reset any previous error
           console.log("LOADING");
           break;
         case "RESULT":
@@ -51,6 +55,13 @@ function App() {
           setFinished(true);
           console.log("DONE");
           break;
+        case "ERROR":
+          setError("Failed to load the model. Please try again.");
+          setLoading(false);
+          console.log("ERROR: Model couldn't be loaded.");
+          break;
+        default:
+          console.log("The model not able to load properly", f.data.status);
       }
     };
 
@@ -88,7 +99,9 @@ function App() {
     <div className="flex flex-col max-w-[1000px] mx-auto w-full">
       <section className="min-h-screen flex flex-col">
         <Header />
-        {output ? (
+        {error ? ( // Show error message if any
+          <div className="text-red-500 text-center mt-4">{error}</div>
+        ) : output ? (
           <Information output={output} finished={finished} />
         ) : loading ? (
           <Transcribing />

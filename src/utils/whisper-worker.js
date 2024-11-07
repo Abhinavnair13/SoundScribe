@@ -10,7 +10,6 @@ class MyTranscriptionPipeline {
     if (this.instance === null) {
       this.instance = await pipeline(this.task, null, { progress_callback });
     }
-
     return this.instance;
   }
 }
@@ -26,11 +25,12 @@ async function transcribe(audio) {
   sendLoadingMessage("loading");
 
   let pipeline;
-
   try {
     pipeline = await MyTranscriptionPipeline.getInstance(load_model_callback);
   } catch (err) {
     console.log(err.message);
+    sendErrorMessage("Failed to load the model. Please try again.");
+    return;
   }
 
   sendLoadingMessage("success");
@@ -63,6 +63,14 @@ function sendLoadingMessage(status) {
   self.postMessage({
     type: MessageTypes.LOADING,
     status,
+  });
+}
+
+function sendErrorMessage(error) {
+  // New function to send error messages
+  self.postMessage({
+    type: MessageTypes.ERROR,
+    error,
   });
 }
 

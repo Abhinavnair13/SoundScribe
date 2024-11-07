@@ -5,6 +5,7 @@ export const MessageTypes = {
   RESULT_PARTIAL: "RESULT_PARTIAL",
   INFERENCE_REQUEST: "INFERENCE_REQUEST",
   INFERENCE_DONE: "INFERENCE_DONE",
+  ERROR: "ERROR",
 };
 
 export const LoadingStatus = {

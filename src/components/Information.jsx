@@ -8,6 +8,7 @@ export default function Information(props) {
   const [translation, setTranslation] = useState(null);
   const [toLanguage, setToLanguage] = useState("Select language");
   const [translating, setTranslating] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null); // To store error messages
   console.log(output);
 
   const worker = useRef();
@@ -38,6 +39,12 @@ export default function Information(props) {
           setTranslating(false);
           console.log("DONE");
           break;
+        case "error":
+          setErrorMessage(e.data.error); // Handle error from worker
+          console.error("Error in translation:", e.data.error);
+          break;
+        default:
+          console.log("Unknown status", e.data.status);
       }
     };
 
@@ -78,12 +85,16 @@ export default function Information(props) {
   }
 
   return (
-    <main className="flex-1  p-4 flex flex-col gap-3 text-center sm:gap-4 justify-center pb-20 max-w-prose w-full mx-auto">
+    <main className="flex-1 p-4 flex flex-col gap-3 text-center sm:gap-4 justify-center pb-20 max-w-prose w-full mx-auto">
       <h1 className="font-semibold text-4xl sm:text-5xl md:text-6xl whitespace-nowrap">
         Your <span className="text-purple-400 bold">Transcription</span>
       </h1>
 
-      <div className="grid grid-cols-2 sm:mx-auto bg-white  rounded overflow-hidden items-center p-1 purpleShadow border-[2px] border-solid border-purple-300">
+      {errorMessage && (
+        <div className="text-red-500 text-lg">{errorMessage}</div> // Show error message if any
+      )}
+
+      <div className="grid grid-cols-2 sm:mx-auto bg-white rounded overflow-hidden items-center p-1 purpleShadow border-[2px] border-solid border-purple-300">
         <button
           onClick={() => setTab("transcription")}
           className={
@@ -132,14 +143,14 @@ export default function Information(props) {
         <button
           onClick={handleCopy}
           title="Copy"
-          className="bg-white  hover:text-purple-500 duration-200 text-purple-300 px-2 aspect-square grid place-items-center rounded"
+          className="bg-white hover:text-purple-500 duration-200 text-purple-300 px-2 aspect-square grid place-items-center rounded"
         >
           <i className="fa-solid fa-copy"></i>
         </button>
         <button
           onClick={handleDownload}
           title="Download"
-          className="bg-white  hover:text-purple-500 duration-200 text-purple-300 px-2 aspect-square grid place-items-center rounded"
+          className="bg-white hover:text-purple-500 duration-200 text-purple-300 px-2 aspect-square grid place-items-center rounded"
         >
           <i className="fa-solid fa-download"></i>
         </button>
