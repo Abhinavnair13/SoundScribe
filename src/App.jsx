@@ -35,7 +35,6 @@ function App() {
     }
 
     const onMessageReceived = async (e) => {
-      console.log(e.data.type);
       switch (e.data.type) {
         case "DOWNLOADING":
           setDownloading(true);
