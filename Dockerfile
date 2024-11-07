@@ -1,11 +1,11 @@
-# Step 1: Use a Node image to build the Vite app
-FROM node:16 AS build
+# Stage 1: Build
+FROM node:18 AS build
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json to install dependencies
-COPY package*.json ./
+# Copy package.json and package-lock.json to install dependencies
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
@@ -13,16 +13,16 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the Vite app
+# Run the build script
 RUN npm run build
 
-# Step 2: Use an Nginx image to serve the built app
-FROM nginx:alpine
+# Stage 2: Serve
+FROM nginx:stable-alpine
 
-# Copy the build files to the Nginx html directory
+# Copy build output to nginx directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80 for the app to be accessed
+# Expose port 80
 EXPOSE 80
 
 # Start Nginx server
